@@ -15,26 +15,12 @@ console.log("PORT:", process.env.PORT);
 console.log("MONGO_URI:", process.env.MONGO_URI);
 console.log("MONGODB_URI:", process.env.MONGODB_URI);
 
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  "http://localhost:5173",
-  "http://127.0.0.1:5173"
-].filter(Boolean);
-
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true
-};
-
 // ✅ Middlewares (MUST BE FIRST)
 app.use(express.json());
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // ✅ Routes
@@ -54,9 +40,9 @@ app.use("/api/assignments", assignmentRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/users", userRoutes);
 
-// ✅ Test Route
+// ✅ Health Route
 app.get("/", (req, res) => {
-  res.send("Learnix backend running");
+  res.send("Learnix Backend Running 🚀");
 });
 
 // ✅ MongoDB Connection
